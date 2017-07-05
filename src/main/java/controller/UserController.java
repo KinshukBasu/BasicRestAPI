@@ -29,8 +29,20 @@ public class UserController {
                 return user;
             }
             res.status(400);
-            return new ResponseError("No user with id '%s' found", id);
+            return new ResponseError("No user with id \'%s\' found", id);
         }, json());
+
+        post("/users", (req,res) -> userService.createUser(
+             req.params(":id"),
+             req.queryParams("name"),
+             req.queryParams("email")
+        ), json());
+
+
+        exception(IllegalArgumentException.class, (e,req,res)->{
+            res.status(400);
+            res.body(toJson(new ResponseError(e)));
+        });
     }
 
 }
