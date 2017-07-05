@@ -12,19 +12,25 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import static utility.jsonUtil.*;
+import utility.ResponseError;
+
 public class UserController {
 
     public UserController(final UserService userService) throws Exception {
 
-        get("/users", new Route() {
-            //@Override
-            public Object handle(Request request, Response response) {
-                // process request
-                return userService.getAllUsers();
-            }
-        });
+        get("/users", (req, res) -> userService.getAllUsers(), json());
 
         //more routes
+        get("/users/:id", (req,res) ->{
+            String id = req.params(":id");
+            User user = userService.getUser(id);
+            if(user != null){
+                return user;
+            }
+            res.status(400);
+            return new ResponseError("No user with id '%s' found", id);
+        }, json());
     }
 
 }

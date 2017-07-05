@@ -58,8 +58,54 @@ public class UserService {
         return(allUsers);
 
     }
+
+
     // returns a single user by id
-    //public User getUser(String id) { .. }
+    public User getUser(String id){
+        return this.getUser(Long.parseLong(id));
+    }
+
+    public User getUser(long id) {
+
+        User selectUser = new User();
+
+        dbAccess.establishConnection();
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            pstmt = this.dbAccess.conn.prepareStatement("SELECT * FROM USERS WHERE user_id=? LIMIT 1");
+            pstmt.setLong(1,id);
+            rs = pstmt.executeQuery();
+
+            if(!rs.isBeforeFirst()){        //isBeforeFirst prevents having to backtrack if data is to be read
+                return null;
+            }
+            else {
+
+                while (rs.next()) {
+                    selectUser.setId(rs.getLong("user_id"));
+                    selectUser.setName(rs.getString("user_name"));
+                    selectUser.setEmail(rs.getString("user_username"));
+                }
+            }
+        } catch(Exception e){
+            //TODO - Add better exception handling?
+            System.out.println(e);
+        } finally {
+            if (rs != null) try {
+                rs.close();
+            } catch (SQLException logOrIgnore) {
+            }
+            if (pstmt != null) try {
+                pstmt.close();
+            } catch (SQLException logOrIgnore) {
+            }
+            this.dbAccess.closeConnection();
+        }
+        return selectUser;
+    }
     // creates a new user
     //public User createUser(String name, String email) { .. }
     // updates an existing user
