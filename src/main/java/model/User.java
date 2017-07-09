@@ -9,6 +9,18 @@ public class User {
     private String name;
     private String email;
 
+    public User(String id, String name, String email){
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public User(){
+        this.id = null;
+        this.name = null;
+        this.email = null;
+    }
+
     public String getId() {
         return id;
     }

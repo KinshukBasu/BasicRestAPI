@@ -33,9 +33,15 @@ public class UserController {
         }, json());
 
         post("/users", (req,res) -> userService.createUser(
-             req.params(":id"),
+             req.queryParams("id"),
              req.queryParams("name"),
              req.queryParams("email")
+        ), json());
+
+        put("/users/:id", (req, res) -> userService.updateUser(
+                req.params(":id"),
+                req.queryParams("name"),
+                req.queryParams("email")
         ), json());
 
 

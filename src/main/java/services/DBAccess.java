@@ -30,7 +30,7 @@ public class DBAccess {
             System.out.println("Database connected!");
 
         } catch (SQLException e) {
-            throw new IllegalStateException("Cannot connect the database!", e);
+            throw new IllegalStateException("Cannot connect to the database!", e);
         }
     }
 
